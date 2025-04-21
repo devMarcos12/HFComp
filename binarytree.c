@@ -10,7 +10,7 @@ struct arvore* combinar_nos(FilaPrioridade **fila) {
 
     
     FilaPrioridade *esquerdo = *fila;
-    *fila = (*fila)->proximo; // atualiza o inicio da fila para não perder a referencia
+    *fila = (*fila)->proximo; // atualizando o inicio da fila para não perder a referencia
 
     FilaPrioridade *direito = *fila;
     *fila = (*fila)->proximo; 
@@ -50,4 +50,3 @@ struct arvore* combinar_nos(FilaPrioridade **fila) {
 
     return novo; 
 }
-
