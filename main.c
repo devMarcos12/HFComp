@@ -1,6 +1,7 @@
 #include "frequency.h"
 #include "meustipos.h"
 #include "filaprioridade.h"
+#include "binarytree.h"
 #include <stdio.h>
 #include <stdlib.h>
 

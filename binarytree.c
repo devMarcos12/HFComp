@@ -50,3 +50,24 @@ struct arvore* combinar_nos(FilaPrioridade **fila) {
 
     return novo; 
 }
+
+arvore* construir_arvore_huffman(FilaPrioridade **fila) {
+    while (*fila && (*fila)->proximo) {
+        arvore *nova_arvore = combinar_nos(fila);
+
+        FilaPrioridade *novo_no = malloc(sizeof(FilaPrioridade));
+        if (!novo_no) {
+            fprintf(stderr, "Erro ao alocar memória para novo nó\n");
+            return NULL;
+        }
+
+        novo_no->caractere = 0;
+        novo_no->peso = nova_arvore->soma;
+        novo_no->proximo = NULL;
+
+        // reutilizando a fila de prioridade pra organizar por peso
+        inserir_na_fila(fila, novo_no->caractere, novo_no->peso);
+    }
+
+    return NULL;
+}
