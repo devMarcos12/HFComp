@@ -58,7 +58,7 @@ arvore* combinar_nos(FilaPrioridade **fila) {
         no_direito = criar_no_arvore(direito->caractere, direito->peso);
     }
 
-    arvore *no_interno = criar_no_interno(esquerdo->no_arvore, direito->no_arvore);
+    arvore *no_interno = criar_no_interno(no_esquerdo, no_direito);
 
     FilaPrioridade *novo_no_fila = malloc(sizeof(FilaPrioridade));
     if (!novo_no_fila) {
@@ -71,7 +71,7 @@ arvore* combinar_nos(FilaPrioridade **fila) {
     novo_no_fila->proximo = NULL;
     novo_no_fila->no_arvore = no_interno;
 
-    inserir_na_fila(fila, no_interno->caractere, no_interno->peso); 
+    inserir_na_fila(fila, novo_no_fila->caractere, novo_no_fila->peso); 
 
     free(esquerdo);
     free(direito);
