@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 arvore* criar_no_arvore(U8 caractere, U32 peso) {
     arvore *novo = malloc(sizeof(arvore));
     if (novo == NULL) {
@@ -17,9 +16,7 @@ arvore* criar_no_arvore(U8 caractere, U32 peso) {
     return novo;
 }   
 
-
 arvore* criar_no_interno(arvore *esquerdo, arvore *direito) {
-
     arvore *no = malloc(sizeof(arvore)); 
     
     if (no == NULL) {
@@ -27,14 +24,13 @@ arvore* criar_no_interno(arvore *esquerdo, arvore *direito) {
         return NULL;
     }
 
-    no->caractere = "\0";
+    no->caractere = '\0';
     no->peso = esquerdo->peso + direito->peso; // soma os pesos dos dois nós
     no->filhoesquerda = esquerdo; 
     no->filhodireita = direito;
 
     return no;
 }
-
 
 arvore* combinar_nos(FilaPrioridade **fila) {
     if (*fila == NULL || (*fila)->proximo == NULL) {
@@ -70,7 +66,7 @@ arvore* combinar_nos(FilaPrioridade **fila) {
         return NULL;
     }  
 
-    novo_no_fila->caractere = "\0";
+    novo_no_fila->caractere = '\0';
     novo_no_fila->peso = no_interno->peso;
     novo_no_fila->proximo = NULL;
     novo_no_fila->no_arvore = no_interno;
