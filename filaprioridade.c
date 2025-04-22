@@ -13,6 +13,7 @@ void inserir_na_fila(FilaPrioridade **fila, U8 caractere, U32 peso) {
     novo->caractere = caractere;
     novo->peso = peso;
     novo->proximo = NULL;
+    novo->no_arvore = NULL;
 
     if (*fila == NULL){
         *fila = novo;

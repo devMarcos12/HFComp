@@ -2,11 +2,13 @@
 #define FILAPRIORIDADE_H
 
 #include "meustipos.h"
+#include "binarytree.h"
 
 typedef struct FilaPrioridade {
     U8 caractere;
     U32 peso;
     struct FilaPrioridade *proximo;
+    arvore *no_arvore;
 }FilaPrioridade;
 
 void inserir_na_fila(FilaPrioridade **fila, U8 caractere, U32 peso);
