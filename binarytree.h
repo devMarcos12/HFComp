@@ -3,6 +3,8 @@
 
 #include "meustipos.h"
 
+typedef struct FilaPrioridade FilaPrioridade;
+
 typedef struct arvore {
     U8 caractere; 
     U32 peso;

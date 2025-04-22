@@ -2,7 +2,8 @@
 #define FILAPRIORIDADE_H
 
 #include "meustipos.h"
-#include "binarytree.h"
+
+typedef struct arvore arvore;
 
 typedef struct FilaPrioridade {
     U8 caractere;
