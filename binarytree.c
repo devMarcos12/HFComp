@@ -39,10 +39,10 @@ arvore* combinar_nos(FilaPrioridade **fila) {
     }
 
     FilaPrioridade *esquerdo = *fila;
-    *fila = (*fila)->proximo; // atualizando o inicio da fila para não perder a referencia
+    *fila = (*fila)->proximo;
 
     FilaPrioridade *direito = *fila;
-    *fila = (*fila)->proximo; 
+    *fila = (*fila)->proximo;
 
     arvore *no_esquerdo, *no_direito;
 
@@ -60,46 +60,85 @@ arvore* combinar_nos(FilaPrioridade **fila) {
 
     arvore *no_interno = criar_no_interno(no_esquerdo, no_direito);
 
-    FilaPrioridade *novo_no_fila = malloc(sizeof(FilaPrioridade));
-    if (!novo_no_fila) {
-        fprintf(stderr, "Erro ao alocar memória para novo nó da fila\n");
-        return NULL;
-    }  
-
-    novo_no_fila->caractere = '\0';
-    novo_no_fila->peso = no_interno->peso;
-    novo_no_fila->proximo = NULL;
-    novo_no_fila->no_arvore = no_interno;
-
-    inserir_na_fila(fila, novo_no_fila->caractere, novo_no_fila->peso); 
+    inserir_na_fila(fila, no_interno->caractere, no_interno->peso);
+    
+    // Encontrar o nó recém-inserido na fila
+    FilaPrioridade *atual = *fila;
+    while (atual != NULL && atual->peso != no_interno->peso) {
+        atual = atual->proximo;
+    }
+    
+    if (atual != NULL) {
+        atual->no_arvore = no_interno;
+    }
 
     free(esquerdo);
     free(direito);
-    free(novo_no_fila);
 
     return no_interno;
 }
-
-/*
 arvore* construir_arvore_huffman(FilaPrioridade **fila) {
-    while (*fila && (*fila)->proximo) {
-        arvore *nova_arvore = combinar_nos(fila);
-
-        FilaPrioridade *novo_no = malloc(sizeof(FilaPrioridade));
-        if (!novo_no) {
-            fprintf(stderr, "Erro ao alocar memória para novo nó\n");
-            return NULL;
-        }
-
-        novo_no->caractere = 0;
-        novo_no->peso = nova_arvore->peso;
-        novo_no->proximo = NULL;
-
-        // reutilizando a fila de prioridade pra organizar por peso
-        inserir_na_fila(fila, novo_no->caractere, novo_no->peso);
+    if (*fila == NULL) {
+        fprintf(stderr, "Fila vazia, não é possível construir a árvore\n");
+        return NULL;
     }
 
-    return NULL;
+    // Pode ser tanto o ultimo elemento da fila quanto o único elemento da fila
+    // Se torna a raiz da árvore
+    if ((*fila)->proximo == NULL)  {
+        arvore *no = criar_no_arvore((*fila)->caractere, (*fila)->peso);
+        free(*fila);
+        *fila = NULL; // Limpa a fila após a construção da árvore
+        return no;
+    }
+
+    FilaPrioridade *atual = *fila;
+    while (atual != NULL) {
+        if (atual->no_arvore == NULL) {
+            atual->no_arvore = criar_no_arvore(atual->caractere, atual->peso);
+        }
+        atual = atual->proximo;
+    }
+
+    while (*fila != NULL && (*fila)->proximo != NULL){
+        combinar_nos(fila);
+    }
+
+    arvore *raiz = NULL;
+    if (*fila != NULL){
+        raiz = (*fila)->no_arvore; // A raiz da árvore é o nó que sobrou na fila
+        free(*fila); // Libera a fila após a construção da árvore
+        *fila = NULL;
+    }
+    return raiz;
 }
 
-*/
+void imprimir_arvore(arvore *raiz, U32 nivel) {
+    if (raiz == NULL) {
+        return;
+    }
+    
+    for (int i = 0; i < nivel; i++) {
+        printf("  ");
+    }
+
+    if (raiz->caractere != '\0') {
+        printf("'%c' (%u)\n", raiz->caractere, raiz->peso);
+    } else {
+        printf("* (%u)\n", raiz->peso);
+    }
+        
+    imprimir_arvore(raiz->filhoesquerda, nivel + 1);
+    imprimir_arvore(raiz->filhodireita, nivel + 1);
+}
+
+void liberar_memoria(arvore *raiz) {
+    if (raiz == NULL) {
+        return;
+    }
+    
+    liberar_memoria(raiz->filhoesquerda);
+    liberar_memoria(raiz->filhodireita);
+    
+    free(raiz);
+}

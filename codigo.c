@@ -1,4 +1,5 @@
 #include "codigo.h"
+#include <stdlib.h>
 
 boolean novo_codigo (Codigo* c /* por referência */)
 {
@@ -49,8 +50,7 @@ boolean joga_fora_bit (Codigo* c /* por referência */)
     c->byte[c->capacidade/8-1]>>=1;
     c->tamanho--;
 
-    if c->capacidade>8 && c->capacidade-c->tamanho==8
-    {
+    if (c->capacidade>8 && c->capacidade-c->tamanho==8) {
         U8* novo=(U8*)malloc((c->capacidade/8-1)*sizeof(U8));
         if (novo==NULL) return false;
 

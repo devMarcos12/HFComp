@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void inserir_na_fila(FilaPrioridade **fila, U8 caractere, U32 peso) {
+void inserir_na_fila(FilaPrioridade **fila, U8 byte, U32 peso) {
     FilaPrioridade *aux, *novo = malloc(sizeof(FilaPrioridade));
 
     if (novo == NULL) {
@@ -10,10 +10,9 @@ void inserir_na_fila(FilaPrioridade **fila, U8 caractere, U32 peso) {
         return;
     }
 
-    novo->caractere = caractere;
+    novo->byte = byte;
     novo->peso = peso;
     novo->proximo = NULL;
-    novo->no_arvore = NULL;
 
     if (*fila == NULL){
         *fila = novo;
@@ -33,20 +32,20 @@ void inserir_na_fila(FilaPrioridade **fila, U8 caractere, U32 peso) {
     }
 }
 
-void criar_fila_prioridade(const U32 frequencias[256], FilaPrioridade **fila) {
-    *fila = NULL;
-
+FilaPrioridade* criar_fila_prioridade(const Tabela_de_frequencias *tab) {
+    FilaPrioridade *fila = NULL;
     for (U16 i = 0; i < 256; i++) {
-        if (frequencias[i] > 0) {
-            inserir_na_fila(fila, (U8)i, frequencias[i]);
+        if (tab->vetor[i] != NULL) {
+            inserir_na_fila(&fila, tab->vetor[i]->informacao.byte, tab->vetor[i]->informacao.frequencia);
         }
     }
+    return fila;
 }
 
 void imprimir_fila(FilaPrioridade *fila) {
     FilaPrioridade *aux = fila;
     while (aux) {
-        printf("Caractere: %c, Peso: %u\n", aux->caractere, aux->peso);
+        printf("Caractere: %u, Peso: %u\n", aux->byte, aux->peso);
         aux = aux->proximo;
     }
 }

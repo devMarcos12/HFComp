@@ -1,31 +1,34 @@
-#include "meustipos.h"
 #include "frequency.h"
+#include "tabela_de_frequencias.h"
 #include <stdio.h>
 
-void contar_frequencias(const U8 *nome_arquivo, U32 frequencias[256]) {
-    for (I32 i = 0; i < 256; i++) {
-        frequencias[i] = 0;
-    }
+boolean contar_frequencias(const U8 *nome_arquivo, Tabela_de_frequencias *tab) {
 
-    FILE *arquivo = fopen(nome_arquivo, "r");
-    if (arquivo == NULL) {
-        fprintf(stderr, "Erro ao abrir o arquivo %s\n", nome_arquivo);
-        return;
-    }
+    U8 byte;
 
-    I32 c;
-    while ((c = fgetc(arquivo)) != EOF){
-        frequencias[c]++;
+    nova_tabela_de_frequencias(tab);
+
+    FILE *arquivo = fopen(nome_arquivo, "rb+");
+    if (arquivo != NULL) {
+        while (fread(&byte, sizeof(U8), 1, arquivo) == 1) {
+            if (inclua_byte(byte, tab) == false) {
+                fclose(arquivo);
+                return false;
+            }
+        }
+        junte_nodos_no_inicio_do_vetor(tab);
+    } else {
+        return false;
     } 
 
     fclose(arquivo);
-
+    return true;
 }
 
-void imprimir_frequencias(const U32 frequencias[256]) {
+void imprimir_frequencias(const Tabela_de_frequencias *tab) {
     for (U16 i = 0; i < 256; i++) {
-        if (frequencias[i] > 0) {
-            printf("Caractere: %c, Frequencia: %u\n", i, frequencias[i]);
+        if (tab->vetor[i] != NULL) {
+            printf("Byte: %u, Frequencia: %llu\n", tab->vetor[i]->informacao.byte, tab->vetor[i]->informacao.frequencia);
         }
     }
 }
