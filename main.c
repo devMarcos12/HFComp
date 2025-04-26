@@ -6,10 +6,10 @@
 
 int main() {
     Tabela_de_frequencias tab;
-    if (contar_frequencias("montanha.jpeg", &tab)) {
+    if (contar_frequencias("test.txt", &tab)) {
         imprimir_frequencias(&tab);
     } else {
-        printf("Erro ao contar frequências.\n");
+        printf("Erro ao contar frequencias.\n");
     }
 
     FilaPrioridade *fila = criar_fila_prioridade(&tab);
