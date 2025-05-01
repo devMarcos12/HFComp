@@ -7,16 +7,17 @@
 typedef struct arvore arvore;
 
 typedef struct FilaPrioridade {
-    U8 byte;
+    Ptr_de_no_de_arvore_binaria no_arvore;
     U32 peso;
     struct FilaPrioridade *proximo;
 }FilaPrioridade;
 
-void inserir_na_fila(FilaPrioridade **fila, U8 caractere, U32 peso);
+void inserir_na_fila(FilaPrioridade **fila, Ptr_de_no_de_arvore_binaria no);
 
 FilaPrioridade* criar_fila_prioridade(const Tabela_de_frequencias *tab);
 
 void imprimir_fila(FilaPrioridade *fila);
 
+Ptr_de_no_de_arvore_binaria contruir_arvore(FilaPrioridade **fila); 
 
 #endif

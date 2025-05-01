@@ -2,6 +2,7 @@
 #include "filaprioridade.h"
 #include "meustipos.h"
 #include "tabela_de_frequencias.h"
+#include "binarytree.h"
 #include <stdio.h>
 
 int main() {
@@ -19,6 +20,18 @@ int main() {
     } else {
         printf("Erro ao criar fila de prioridade.\n");
     }
+
+    Ptr_de_no_de_arvore_binaria raiz = contruir_arvore(&fila);
+
+    if(!raiz){
+        printf("Erro ao contruir arvore de Huffman. \n");
+        return 1;
+    }
+
+    printf("Arvore de Huffman criada com sucesso:\n");
+    imprimir_arvore_binaria(raiz, 0);
+
+    liberar_arvore_binaria(raiz);
 
     return 0;
 }

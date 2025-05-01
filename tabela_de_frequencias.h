@@ -21,6 +21,7 @@ typedef struct {
     U16 quantidade_de_posicoes_preenchidas;
 } Tabela_de_frequencias;
 
+
 void nova_tabela_de_frequencias (Tabela_de_frequencias* tab /* por referência */);
 boolean inclua_byte (U8 byte  /* por referencia */, Tabela_de_frequencias* tab /* por referencia */);
 void junte_nodos_no_inicio_do_vetor (Tabela_de_frequencias* tab /* por referencia */);
