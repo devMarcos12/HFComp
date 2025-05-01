@@ -28,7 +28,7 @@ void liberar_arvore_binaria (Ptr_de_no_de_arvore_binaria raiz) {
     free(raiz);
 }
 
-void imprimir_arvore_binaria (Ptr_de_no_de_arvore_binaria raiz, U16 nivel){
+void imprimir_arvore_binaria (Ptr_de_no_de_arvore_binaria raiz, U16 nivel) {
 
     if (raiz == NULL) return;
 
@@ -37,9 +37,9 @@ void imprimir_arvore_binaria (Ptr_de_no_de_arvore_binaria raiz, U16 nivel){
     }
 
     if(raiz->esquerda == NULL && raiz->direita == NULL) {
-        printf("Byte: %c, Frequencia: %llu\n", raiz->informacao.byte, raiz->informacao.frequencia);
+        printf("Byte: %u, Frequencia: %llu\n", raiz->informacao.byte, raiz->informacao.frequencia);
     } else {
-        printf("Byte: %c, Frequencia: %llu\n", raiz->informacao.byte, raiz->informacao.frequencia);
+        printf("Byte: %u, Frequencia: %llu\n", raiz->informacao.byte, raiz->informacao.frequencia);
     }
 
     imprimir_arvore_binaria(raiz->esquerda, nivel + 1);

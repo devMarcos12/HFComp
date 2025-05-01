@@ -3,6 +3,7 @@
 #include "meustipos.h"
 #include "tabela_de_frequencias.h"
 #include "binarytree.h"
+#include "compactar.h"
 #include "codigo.h"
 #include <stdio.h>
 
@@ -63,6 +64,13 @@ int main() {
             printf("\n");
         }
     }
+
+    if (compactar_arquivo("test.txt", "test.bin", raiz, tabela_de_codigos)) {
+        printf("Arquivo compactado com sucesso.\n");
+    } else {
+        printf("Erro ao compactar o arquivo.\n");
+    }
+
 
     // Libera a memória alocada para os códigos
     for (int i = 0; i < 256; i++) {
