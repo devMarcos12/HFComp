@@ -45,3 +45,22 @@ void imprimir_arvore_binaria (Ptr_de_no_de_arvore_binaria raiz, U16 nivel){
     imprimir_arvore_binaria(raiz->esquerda, nivel + 1);
     imprimir_arvore_binaria(raiz->direita, nivel + 1);
 }
+
+//Tabela de códigos
+void gerar_codigos(Ptr_de_no_de_arvore_binaria no, Codigo* codigo_atual, Codigo* tabela_de_codigos) {
+    if (no == NULL) return;
+
+    if (no->esquerda == NULL && no->direita == NULL) {
+        clone(*codigo_atual, &tabela_de_codigos[no->informacao.byte]);
+        return;
+    }
+
+    adiciona_bit(codigo_atual, 0);
+    gerar_codigos(no->esquerda, codigo_atual, tabela_de_codigos);
+    joga_fora_bit(codigo_atual);
+
+    adiciona_bit(codigo_atual, 1);
+    gerar_codigos(no->direita, codigo_atual, tabela_de_codigos);
+    joga_fora_bit(codigo_atual);
+}
+    

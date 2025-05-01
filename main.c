@@ -3,6 +3,7 @@
 #include "meustipos.h"
 #include "tabela_de_frequencias.h"
 #include "binarytree.h"
+#include "codigo.h"
 #include <stdio.h>
 
 int main() {
@@ -30,6 +31,44 @@ int main() {
 
     printf("Arvore de Huffman criada com sucesso:\n");
     imprimir_arvore_binaria(raiz, 0);
+
+    Codigo tabela_de_codigos[256];
+
+    for (int i = 0; i < 256; i++) {
+        novo_codigo(&tabela_de_codigos[i]);
+    }
+
+    // Cria um código vazio para começar a gerar os códigos
+    Codigo codigo_atual;
+    novo_codigo(&codigo_atual);
+
+    // Gera os código a partir da árvore
+    gerar_codigos(raiz, &codigo_atual, tabela_de_codigos);
+
+    // Imprime os códigos gerados
+    printf("\nCodigos de Huffman gerados:\n");
+    for (int i = 0; i < 256; i++) {
+        if (tabela_de_codigos[i].tamanho > 0) {
+            printf("Byte: ");
+            if (i >= 32 && i <= 126) {
+                printf("'%c'", i);
+            } else {
+                printf("0x%02X", i);
+            }
+            printf(" Codigo: ");
+            for (int j = 0; j < tabela_de_codigos[i].tamanho; j++) {
+                int bit = (tabela_de_codigos[i].byte[j / 8] >> (7 - (j % 8))) & 1;
+                printf("%d", bit);
+            }
+            printf("\n");
+        }
+    }
+
+    // Libera a memória alocada para os códigos
+    for (int i = 0; i < 256; i++) {
+        free_codigo(&tabela_de_codigos[i]);
+    }
+    free_codigo(&codigo_atual);
 
     liberar_arvore_binaria(raiz);
 
