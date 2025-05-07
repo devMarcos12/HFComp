@@ -6,79 +6,101 @@
 #include "compactar.h"
 #include "codigo.h"
 #include <stdio.h>
+#include <string.h>
 
-int main() {
+#define MAX_FILENAME 256
+
+void limpar_buffer() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
+void compactar() {
+    char arquivo_entrada[MAX_FILENAME];
+    char arquivo_saida[MAX_FILENAME];
+    
+    printf("\n=== Compactação de Arquivo ===\n");
+    printf("Digite o nome do arquivo a ser compactado: ");
+    scanf("%s", arquivo_entrada);
+    printf("Digite o nome do arquivo de saída (compactado): ");
+    scanf("%s", arquivo_saida);
+
     Tabela_de_frequencias tab;
-    if (contar_frequencias("test.txt", &tab)) {
-        imprimir_frequencias(&tab);
-    } else {
-        printf("Erro ao contar frequencias.\n");
+    if (!contar_frequencias(arquivo_entrada, &tab)) {
+        printf("Erro ao contar frequências do arquivo.\n");
+        return;
     }
 
     FilaPrioridade *fila = criar_fila_prioridade(&tab);
-    if (fila) {
-        printf("Fila de prioridade criada com sucesso:\n");
-        imprimir_fila(fila);
-    } else {
+    if (!fila) {
         printf("Erro ao criar fila de prioridade.\n");
+        return;
     }
 
     Ptr_de_no_de_arvore_binaria raiz = contruir_arvore(&fila);
-
-    if(!raiz){
-        printf("Erro ao contruir arvore de Huffman. \n");
-        return 1;
+    if (!raiz) {
+        printf("Erro ao construir árvore de Huffman.\n");
+        return;
     }
 
-    printf("Arvore de Huffman criada com sucesso:\n");
-    imprimir_arvore_binaria(raiz, 0);
-
     Codigo tabela_de_codigos[256];
-
     for (int i = 0; i < 256; i++) {
         novo_codigo(&tabela_de_codigos[i]);
     }
 
-    // Cria um código vazio para começar a gerar os códigos
     Codigo codigo_atual;
     novo_codigo(&codigo_atual);
-
-    // Gera os código a partir da árvore
     gerar_codigos(raiz, &codigo_atual, tabela_de_codigos);
 
-    // Imprime os códigos gerados
-    printf("\nCodigos de Huffman gerados:\n");
-    for (int i = 0; i < 256; i++) {
-        if (tabela_de_codigos[i].tamanho > 0) {
-            printf("Byte: ");
-            if (i >= 32 && i <= 126) {
-                printf("'%c'", i);
-            } else {
-                printf("0x%02X", i);
-            }
-            printf(" Codigo: ");
-            for (int j = 0; j < tabela_de_codigos[i].tamanho; j++) {
-                int bit = (tabela_de_codigos[i].byte[j / 8] >> (7 - (j % 8))) & 1;
-                printf("%d", bit);
-            }
-            printf("\n");
-        }
-    }
-
-    if (compactar_arquivo("test.txt", "test.bin", raiz, tabela_de_codigos)) {
-        printf("Arquivo compactado com sucesso.\n");
+    if (compactar_arquivo(arquivo_entrada, arquivo_saida, raiz, tabela_de_codigos)) {
+        printf("\nArquivo compactado com sucesso!\n");
     } else {
         printf("Erro ao compactar o arquivo.\n");
     }
 
-
-    // Libera a memória alocada para os códigos
+    // Liberação de memória
     for (int i = 0; i < 256; i++) {
         free_codigo(&tabela_de_codigos[i]);
     }
     free_codigo(&codigo_atual);
-
     liberar_arvore_binaria(raiz);
+}
+
+void descompactar() {
+
+}
+
+void exibir_menu() {
+    printf("\n === Menu ===\n");
+    printf("Escolha uma opcao:\n");
+    printf("1. Compactar arquivo\n");
+    printf("2. Descompactar arquivo\n");
+    printf("3. Sair\n");
+    printf("Escolha uma opcao: ");
+}
+
+int main() {
+    int opcao;
+
+    do {
+        exibir_menu();
+        scanf("%d", &opcao);
+        limpar_buffer();
+
+        switch (opcao) {
+            case 1:
+                compactar();
+                break;
+            case 2:
+                descompactar();
+                break;
+            case 3:
+                printf("\nEncerrando o programa...\n");
+                break;
+            default:
+                printf("\nOpcao invalida! Por favor, tente novamente.\n");
+        }
+    } while (opcao != 3);
 
     return 0;
 }
