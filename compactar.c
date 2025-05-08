@@ -4,7 +4,7 @@
 #include "meustipos.h"  // Inclua seu header de tipos
 
 // Escreve um bit no arquivo com buffer
-void escrever_bit(FILE *out, U8 *buffer, I32 *bit_pos, int bit) {
+void juntar_bits(FILE *out, U8 *buffer, I32 *bit_pos, I32 bit) {
     *buffer = (*buffer << 1) | (bit & 1);
     (*bit_pos)++;
 
@@ -36,17 +36,17 @@ void serializar_arvore(FILE *out, Ptr_de_no_de_arvore_binaria no, U8 *buffer, I3
 
     if (!no->esquerda && !no->direita) {
         // Nó folha: escreve bit 1 + byte armazenado em no->informacao.byte
-        escrever_bit(out, buffer, bit_pos, 1);
+        juntar_bits(out, buffer, bit_pos, 1);
         escrever_byte(out, buffer, bit_pos, no->informacao.byte);
     } else {
         // Nó interno: escreve bit 0 e serializa filhos
-        escrever_bit(out, buffer, bit_pos, 0);
+        juntar_bits(out, buffer, bit_pos, 0);
         serializar_arvore(out, no->esquerda, buffer, bit_pos);
         serializar_arvore(out, no->direita, buffer, bit_pos);
     }
 }
 
-boolean compactar_arquivo(const char *nome_entrada, const char *nome_saida, Ptr_de_no_de_arvore_binaria raiz, Codigo tabela_de_codigos[256]) {
+boolean compactar_arquivo(const U8 *nome_entrada, const U8 *nome_saida, Ptr_de_no_de_arvore_binaria raiz, Codigo tabela_de_codigos[256]) {
     FILE *fin = fopen(nome_entrada, "rb");
     if (!fin) {
         perror("Erro ao abrir arquivo de entrada");
@@ -78,8 +78,8 @@ boolean compactar_arquivo(const char *nome_entrada, const char *nome_saida, Ptr_
     I32 c;
     while ((c = fgetc(fin)) != EOF) {
         for (I32 i = 0; i < tabela_de_codigos[(U8)c].tamanho; i++) {
-            int bit = (tabela_de_codigos[(U8)c].byte[i / 8] >> (7 - (i % 8))) & 1;
-            escrever_bit(fout, &buffer, &bit_pos, bit);
+            I32 bit = (tabela_de_codigos[(U8)c].byte[i / 8] >> (7 - (i % 8))) & 1;
+            juntar_bits(fout, &buffer, &bit_pos, bit);
         }
     }
 

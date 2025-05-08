@@ -11,18 +11,18 @@
 #define MAX_FILENAME 256
 
 void limpar_buffer() {
-    int c;
+    I32 c;
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
 void compactar() {
-    char arquivo_entrada[MAX_FILENAME];
-    char arquivo_saida[MAX_FILENAME];
+    U8 arquivo_entrada[MAX_FILENAME];
+    U8 arquivo_saida[MAX_FILENAME];
     
-    printf("\n=== Compactação de Arquivo ===\n");
+    printf("\n=== Compactacao de Arquivo ===\n");
     printf("Digite o nome do arquivo a ser compactado: ");
     scanf("%s", arquivo_entrada);
-    printf("Digite o nome do arquivo de saída (compactado): ");
+    printf("Digite o nome do arquivo de saida (compactado): ");
     scanf("%s", arquivo_saida);
 
     Tabela_de_frequencias tab;
@@ -44,7 +44,7 @@ void compactar() {
     }
 
     Codigo tabela_de_codigos[256];
-    for (int i = 0; i < 256; i++) {
+    for (I32 i = 0; i < 256; i++) {
         novo_codigo(&tabela_de_codigos[i]);
     }
 
@@ -59,7 +59,7 @@ void compactar() {
     }
 
     // Liberação de memória
-    for (int i = 0; i < 256; i++) {
+    for (I32 i = 0; i < 256; i++) {
         free_codigo(&tabela_de_codigos[i]);
     }
     free_codigo(&codigo_atual);
