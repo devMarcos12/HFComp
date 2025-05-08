@@ -79,8 +79,8 @@ void exibir_menu() {
     printf("Escolha uma opcao: ");
 }
 
-int main() {
-    int opcao;
+I32 main() {
+    I32 opcao;
 
     do {
         exibir_menu();

@@ -25,7 +25,7 @@ boolean adiciona_bit(Codigo* c, U8 valor) {
             return false;
         }
 
-        for (int i = 0; i < c->capacidade / 8; i++)
+        for (I32 i = 0; i < c->capacidade / 8; i++)
             novo[i] = c->byte[i];
 
         free(c->byte);
@@ -33,8 +33,8 @@ boolean adiciona_bit(Codigo* c, U8 valor) {
         c->capacidade += 8;
     }
 
-    int byte_index = c->tamanho / 8;
-    int bit_index = 7 - (c->tamanho % 8);
+    I32 byte_index = c->tamanho / 8;
+    I32 bit_index = 7 - (c->tamanho % 8);
 
     c->byte[byte_index] &= ~(1 << bit_index);
 
@@ -51,8 +51,8 @@ boolean joga_fora_bit(Codigo* c) {
         return false;
     }
 
-    int byte_index = (c->tamanho - 1) / 8;
-    int bit_index = 7 - ((c->tamanho - 1) % 8);
+    I32 byte_index = (c->tamanho - 1) / 8;
+    I32 bit_index = 7 - ((c->tamanho - 1) % 8);
 
     c->byte[byte_index] &= ~(1 << bit_index);
 
@@ -64,7 +64,7 @@ boolean joga_fora_bit(Codigo* c) {
             return false;
         }
 
-        for (int i = 0; i < c->tamanho / 8; i++)
+        for (I32 i = 0; i < c->tamanho / 8; i++)
             novo[i] = c->byte[i];
 
         free(c->byte);
@@ -81,7 +81,7 @@ boolean clone(Codigo original, Codigo* copia) {
         return false;
     }
 
-    for (int i = 0; i < original.capacidade / 8; i++) {
+    for (I32 i = 0; i < original.capacidade / 8; i++) {
         copia->byte[i] = original.byte[i];
     }
 
