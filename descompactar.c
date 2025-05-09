@@ -1,26 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include "filaprioridade.h"
 #include "binarytree.h"
 #include "meustipos.h"
 
-FilaPrioridade* ler_fila_prioridade(FILE *file_in) {
+FilaPrioridade* ler_fila_prioridade(FILE *fin) {
     U16 count;
-    if (fread(&count, sizeof(U16), 1, file_in) != 1) return NULL;
-
-    // Count how many symbols are in the file (debugging purposes)
-    // printf("Count lido: %u\n", count);
+    if (fread(&count, sizeof(U16), 1, fin) != 1) return NULL;
+    printf("Count lido: %u\n", count);
 
     FilaPrioridade *fila = NULL;
     for (U16 i = 0; i < count; i++) {
         U8 byte;
         U32 freq;
-        if (fread(&byte, sizeof(U8), 1, file_in) != 1) return NULL;
-        if (fread(&freq, sizeof(U32), 1, file_in) != 1) return NULL;
-
-        // Debugging line:
-        // printf("Byte: %u, Freq: %u\n", byte, freq);
+        if (fread(&byte, sizeof(U8), 1, fin) != 1) return NULL;
+        if (fread(&freq, sizeof(U32), 1, fin) != 1) return NULL;
+        printf("Byte: %u, Freq: %u\n", byte, freq);
 
         Elemento elem;
         elem.byte = byte;
@@ -33,62 +28,66 @@ FilaPrioridade* ler_fila_prioridade(FILE *file_in) {
 }
 
 boolean descompactar_arquivo(const U8 *nome_entrada, const U8 *nome_saida) {
-    FILE *file_in = fopen(nome_entrada, "rb");
-    if (!file_in) {
+    FILE *fin = fopen(nome_entrada, "rb");
+    if (!fin) {
+        perror("Erro ao abrir arquivo compactado");
         return false;
     }
 
-    FILE *file_out = fopen(nome_saida, "wb");
-    if (!file_out) {
-        fclose(file_in);
+    FILE *fout = fopen(nome_saida, "wb");
+    if (!fout) {
+        perror("Erro ao abrir arquivo de saída");
+        fclose(fin);
         return false;
     }
 
-    FilaPrioridade *fila = ler_fila_prioridade(file_in);
+    FilaPrioridade *fila = ler_fila_prioridade(fin);
     if (!fila) {
-        fclose(file_in);
-        fclose(file_out);
+        printf("Erro ao ler fila de prioridade.\n");
+        fclose(fin);
+        fclose(fout);
         return false;
     }
 
     Ptr_de_no_de_arvore_binaria raiz = contruir_arvore(&fila);
     if (!raiz) {
-        fclose(file_in);
-        fclose(file_out);
+        printf("Erro ao reconstruir arvore de Huffman.\n");
+        fclose(fin);
+        fclose(fout);
         return false;
     }
 
-    I64 pos_dados = ftell(file_in);
-    fseek(file_in, 0, SEEK_END);
-    I64 tamanho_arquivo = ftell(file_in);
-    I64 tamanho_dados = tamanho_arquivo - pos_dados - 1;
-    fseek(file_in, pos_dados, SEEK_SET);
+    long pos_dados = ftell(fin);
+    fseek(fin, 0, SEEK_END);
+    long tamanho_arquivo = ftell(fin);
+    long tamanho_dados = tamanho_arquivo - pos_dados - 1;
+    fseek(fin, pos_dados, SEEK_SET);
 
     U8 *dados = malloc(tamanho_dados);
     if (!dados) {
         printf("Erro de memoria.\n");
-        fclose(file_in);
-        fclose(file_out);
+        fclose(fin);
+        fclose(fout);
         return false;
     }
-    fread(dados, 1, tamanho_dados, file_in);
+    fread(dados, 1, tamanho_dados, fin);
 
     U8 bits_validos;
-    fread(&bits_validos, 1, 1, file_in);
+    fread(&bits_validos, 1, 1, fin);
 
     Ptr_de_no_de_arvore_binaria atual = raiz;
-    I64 total_bits = (tamanho_dados - 1) * 8 + bits_validos;
-    I64 bits_lidos = 0;
-    for (I64 i = 0; i < tamanho_dados; i++) {
+    long total_bits = (tamanho_dados - 1) * 8 + bits_validos;
+    long bits_lidos = 0;
+    for (long i = 0; i < tamanho_dados; i++) {
         U8 byte = dados[i];
-        U32 limite = (i == tamanho_dados - 1) ? bits_validos : 8;
-        for (U32 b = 7; b >= 8 - limite; b--) {
-            U32 bit = (byte >> b) & 1;
+        I32 limite = (i == tamanho_dados - 1) ? bits_validos : 8;
+        for (I32 b = 7; b >= 8 - limite; b--) {
+            int bit = (byte >> b) & 1;
             if (bit == 0) atual = atual->esquerda;
             else atual = atual->direita;
 
             if (!atual->esquerda && !atual->direita) {
-                fwrite(&atual->informacao.byte, 1, 1, file_out);
+                fwrite(&atual->informacao.byte, 1, 1, fout);
                 atual = raiz;
             }
             bits_lidos++;
@@ -96,8 +95,8 @@ boolean descompactar_arquivo(const U8 *nome_entrada, const U8 *nome_saida) {
     }
 
     free(dados);
-    fclose(file_in);
-    fclose(file_out);
+    fclose(fin);
+    fclose(fout);
     liberar_arvore_binaria(raiz);
     return true;
 }
