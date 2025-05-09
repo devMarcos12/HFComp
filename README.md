@@ -14,7 +14,7 @@ gcc main.c frequency.c tabela_de_frequencias.c filaprioridade.c binarytree.c cod
 After compiling, you can run the program with:
 
  Windows:  ``` ./huffman.exe ```
- Linux: ``` ./huffman ```
+ Linux/macOS: ``` ./huffman ```
 
  ## Notes
 
