@@ -41,7 +41,7 @@ FilaPrioridade* criar_fila_prioridade(const Tabela_de_frequencias *tab) {
 void imprimir_fila(FilaPrioridade *fila) {
     FilaPrioridade *aux = fila;
     while (aux) {
-        printf("Caractere: %c, Peso: %u\n", aux->no_arvore->informacao.byte, aux->peso);
+        // printf("Caractere: %c, Peso: %u\n", aux->no_arvore->informacao.byte, aux->peso);
         aux = aux->proximo;
     }
 }

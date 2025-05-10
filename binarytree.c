@@ -36,11 +36,11 @@ void imprimir_arvore_binaria (Ptr_de_no_de_arvore_binaria raiz, U16 nivel) {
         printf("\t");
     }
 
-    if(raiz->esquerda == NULL && raiz->direita == NULL) {
-        printf("Byte: %u, Frequencia: %llu\n", raiz->informacao.byte, raiz->informacao.frequencia);
-    } else {
-        printf("Byte: %u, Frequencia: %llu\n", raiz->informacao.byte, raiz->informacao.frequencia);
-    }
+    // if(raiz->esquerda == NULL && raiz->direita == NULL) {
+    //     printf("Byte: %u, Frequencia: %llu\n", raiz->informacao.byte, raiz->informacao.frequencia);
+    // } else {
+    //     printf("Byte: %u, Frequencia: %llu\n", raiz->informacao.byte, raiz->informacao.frequencia);
+    // }
 
     imprimir_arvore_binaria(raiz->esquerda, nivel + 1);
     imprimir_arvore_binaria(raiz->direita, nivel + 1);
