@@ -8,7 +8,7 @@ void juntar_bits(FILE *out, U8 *buffer, I32 *bit_pos, I32 bit) {
     *buffer = (*buffer << 1) | (bit & 1);
     (*bit_pos)++;
 
-    printf("%d", bit);
+    //printf("%d", bit);
 
     if (*bit_pos == 8) {
         // Print the bits inside the buffer(byte) (for debugging)
