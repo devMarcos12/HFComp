@@ -7,7 +7,7 @@
 FilaPrioridade* ler_fila_prioridade(FILE *fin) {
     U16 count;
     if (fread(&count, sizeof(U16), 1, fin) != 1) return NULL;
-    printf("Count lido: %u\n", count);
+    //printf("Count lido: %u\n", count);
 
     FilaPrioridade *fila = NULL;
     for (U16 i = 0; i < count; i++) {
@@ -15,7 +15,7 @@ FilaPrioridade* ler_fila_prioridade(FILE *fin) {
         U32 freq;
         if (fread(&byte, sizeof(U8), 1, fin) != 1) return NULL;
         if (fread(&freq, sizeof(U32), 1, fin) != 1) return NULL;
-        printf("Byte: %u, Freq: %u\n", byte, freq);
+        // printf("Byte: %u, Freq: %u\n", byte, freq);
 
         Elemento elem;
         elem.byte = byte;
