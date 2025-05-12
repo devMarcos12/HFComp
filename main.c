@@ -12,6 +12,40 @@
 
 #define MAX_FILENAME 256
 
+
+void limpar_buffer();
+void compactar();
+void descompactar();
+void exibir_menu();
+
+
+I32 main() {
+    U8 opcao;
+
+    do {
+        exibir_menu();
+        scanf("%d", &opcao);
+        limpar_buffer();
+
+        switch (opcao) {
+            case 1:
+                compactar();
+                break;
+            case 2:
+                descompactar();
+                break;
+            case 3:
+                printf("\nEncerrando o programa...\n");
+                break;
+            default:
+                printf("\nOpcao invalida! Por favor, tente novamente.\n");
+        }
+    } while (opcao != 3);
+
+    return 0;
+}
+
+
 void limpar_buffer() {
     I32 c;
     while ((c = getchar()) != '\n' && c != EOF);
@@ -56,6 +90,8 @@ void compactar() {
     novo_codigo(&codigo_atual);
     gerar_codigos(raiz, &codigo_atual, tabela_de_codigos);
 
+    printf("\nArquivo sendo compactado...\n");
+
     if (compactar_arquivo(arquivo_entrada, arquivo_saida, raiz, tabela_de_codigos, fila_para_salvar)) {
         printf("\nArquivo compactado com sucesso!\n");
     } else {
@@ -72,6 +108,7 @@ void compactar() {
     free(fila_para_salvar);
 }
 
+
 void descompactar() {
     U8 arquivo_entrada[MAX_FILENAME];
     U8 arquivo_saida[MAX_FILENAME];
@@ -82,12 +119,15 @@ void descompactar() {
     printf("Digite o nome do arquivo de saida (descompactado): ");
     scanf("%s", arquivo_saida);
 
+    printf("\nArquivo sendo descompactado...\n");
+
     if (descompactar_arquivo(arquivo_entrada, arquivo_saida)) {
         printf("\nArquivo descompactado com sucesso!\n");
     } else {
         printf("Erro ao descompactar o arquivo.\n");
     }
 }
+
 
 void exibir_menu() {
     printf("\n === Menu ===\n");
@@ -96,30 +136,4 @@ void exibir_menu() {
     printf("2. Descompactar arquivo\n");
     printf("3. Sair\n");
     printf("Escolha uma opcao: ");
-}
-
-I32 main() {
-    U8 opcao;
-
-    do {
-        exibir_menu();
-        scanf("%d", &opcao);
-        limpar_buffer();
-
-        switch (opcao) {
-            case 1:
-                compactar();
-                break;
-            case 2:
-                descompactar();
-                break;
-            case 3:
-                printf("\nEncerrando o programa...\n");
-                break;
-            default:
-                printf("\nOpcao invalida! Por favor, tente novamente.\n");
-        }
-    } while (opcao != 3);
-
-    return 0;
 }
