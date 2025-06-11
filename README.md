@@ -7,7 +7,7 @@ It allows you to compress any file, saving space by encoding the most frequent b
 
 To compile the project, use the following command in your terminal or command prompt:
 ```
-gcc main.c frequency.c tabela_de_frequencias.c filaprioridade.c binarytree.c codigo.c compactar.c descompactar.c -o huffman
+make
 ```
 ## Usage
 
